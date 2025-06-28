@@ -1,0 +1,21 @@
+import pandas as pd
+import plotly.express as px
+
+data = {
+    "종목명": ["삼성전자", "SK하이닉스", "LG에너지솔루션", "삼성바이오로직스", "현대차",
+             "NAVER", "카카오", "포스코홀딩스", "기아", "삼성SDI"],
+    "시가총액": [450, 150, 120, 110, 90, 85, 70, 65, 60, 55]
+}
+df = pd.DataFrame(data)
+df["누적비율"] = df["시가총액"].cumsum() / df["시가총액"].sum()
+df["구분"] = ["짝수" if i % 2 == 0 else "홀수" for i in range(len(df))]
+
+fig = px.treemap(
+    df,
+    values="시가총액",
+    path=["구분", "종목명"],
+    color="시가총액",
+    title="시가총액 기준 상위 10개 종목"
+)
+fig.update_layout(margin=dict(t=30, l=0, r=0, b=0))
+fig.write_image("시가총액_시각화.png")
